@@ -5,9 +5,14 @@
 ## GitLab API
 Commits can be obtained via:
 ```bash
-curl --header "PRIVATE-TOKEN: $(your-private-token)" "https://gitlab.rebrainme.com/api/v4/projects/27865/repository/commits"
+curl --header "PRIVATE-TOKEN: $(your-private-token)" "https://gitlab.rebrainme.com/api/v4/projects/27865/repository/commits?since=2021-03-01T00:00:00Z&until=2021-03-31T23:59:00Z"
 ```
 Private token can be generated via Gitlab > Your profile > Preferences > Access Tokens.
+
+`Since` and `until` attributes can be added to show the number of commits within a month, i.e. March:
+```bash
+?since=2021-03-01T00:00:00Z&until=2021-03-31T23:59:00Z
+```
 
 ## Jq
 Jq extracts commits dates and creates a dict, where repeating date occurrences are counted.
@@ -23,9 +28,9 @@ Use [Jq playground](https://jqplay.org/) to play with this pipeline.
 Try to remove commands following pipes starting at the end of the pipeline to see intermediate results.
 
 ## Usage 
-### Run the command:
+### Run the command as one long string:
 ```shell
-curl --header "PRIVATE-TOKEN: $(your-private-token)" "https://gitlab.rebrainme.com/api/v4/projects/27865/repository/commits" | jq '[.[].committed_date ] | map ({  date: (. | strptime("%Y-%m-%dT%H:%M:%S.000%Z") | todate[0:10]), time: (. | strptime("%Y-%m-%dT%H:%M:%S.000%Z") | todate[11:19]) }) | reduce .[] as $item ( {};   .[$item.date] += 1 )'
+curl --header "PRIVATE-TOKEN: $(your-private-token)" "https://gitlab.rebrainme.com/api/v4/projects/27865/repository/commits?since=2021-03-01T00:00:00Z&until=2021-03-31T23:59:00Z" | jq '[.[].committed_date ] | map ({  date: (. | strptime("%Y-%m-%dT%H:%M:%S.000%Z") | todate[0:10]), time: (. | strptime("%Y-%m-%dT%H:%M:%S.000%Z") | todate[11:19]) }) | reduce .[] as $item ( {};   .[$item.date] += 1 )'
 ```
 
 ## Installation  

@@ -1,8 +1,8 @@
 # Number of commits by date
 curl \
 --header \
-"PRIVATE-TOKEN: " \
-"https://gitlab.rebrainme.com/api/v4/projects/27865/repository/commits" \
+"PRIVATE-TOKEN: ji1TdJrjtfmCZwU4wxwi" \
+"https://gitlab.rebrainme.com/api/v4/projects/27865/repository/commits?since=2021-03-01T00:00:00Z&until=2021-03-31T23:59:00Z" \
 | jq '[.[].committed_date ] | map 
     ({  
         date: (. | strptime("%Y-%m-%dT%H:%M:%S.000%Z") | todate[0:10]), 
